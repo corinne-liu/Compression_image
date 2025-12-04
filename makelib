@@ -1,0 +1,23 @@
+CC = gcc
+CFLAGS = -Wall -std=c17 -pedantic -Iinclude -fPIC
+SRC_DIR = src
+OBJ_DIR = obj
+INCLUDE_DIR = include
+
+SRC = $(SRC_DIR)/compression.c $(SRC_DIR)/decompression.c $(SRC_DIR)/bitstream.c $(SRC_DIR)/quadtree.c $(SRC_DIR)/filtrage.c
+OBJ = $(OBJ_DIR)/compression.o $(OBJ_DIR)/decompression.o $(OBJ_DIR)/bitstream.o $(OBJ_DIR)/quadtree.o $(OBJ_DIR)/filtrage.o
+LIB_SHARED = lib/libqtc.so
+
+all: $(LIB_SHARED) $(OBJ)
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	mkdir -p $(OBJ_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(LIB_SHARED): $(OBJ)
+	mkdir -p lib
+	$(CC) -shared -o $@ $^
+	rm -r $(OBJ_DIR)
+
+clean:
+	rm -r lib
